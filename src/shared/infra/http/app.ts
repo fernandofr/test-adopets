@@ -8,6 +8,7 @@ import { errors } from 'celebrate';
 
 import AppError from '@shared/errors/AppError';
 
+import '@shared/container';
 import createConnection from '@shared/infra/typeorm';
 import routes from './routes';
 
