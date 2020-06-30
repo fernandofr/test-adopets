@@ -29,8 +29,8 @@ describe('CreateProduct', () => {
       category: 'dog food',
     });
 
-    const findProducts = await readProduct.execute();
+    const findProducts = await readProduct.execute(1, 10, {});
 
-    expect(findProducts).toBeInstanceOf(Array);
+    expect(findProducts.products).toBeInstanceOf(Array);
   });
 });

@@ -5,19 +5,46 @@ import ReadProductService from '@modules/products/services/ReadProductService';
 import CreateProductService from '@modules/products/services/CreateProductService';
 import UpdateProductService from '@modules/products/services/UpdateProductService';
 import DeleteProductService from '@modules/products/services/DeleteProductService';
-import CreateCategoryService from '@modules/categorys/services/CreateCategoryService';
 
-interface IQueryParams {
+import CreateCategoryService from '@modules/categorys/services/CreateCategoryService';
+import FindCategoryService from '@modules/categorys/services/FindCategoryService';
+
+interface IPagination {
   page?: number;
   limit?: number;
+}
+interface IQueryParams {
+  name?: string;
+  description?: string;
+  category?: string;
 }
 
 export default class ProductsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const readProduct = container.resolve(ReadProductService);
-    const products = await readProduct.execute();
+    const { page = 1, limit = 10 }: IPagination = request.query;
+    const { name, description, category }: IQueryParams = request.query;
 
-    return response.json(products);
+    let where;
+    if (name) {
+      where = { name };
+    }
+
+    if (description) {
+      where = { ...where, description };
+    }
+
+    if (category) {
+      const findCategory = container.resolve(FindCategoryService);
+      const category_id = await findCategory.execute(category);
+      where = { ...where, category_id };
+    }
+
+    const readProduct = container.resolve(ReadProductService);
+
+    const listProducts = await readProduct.execute(page, limit, where);
+
+    response.header('X-Total-Count', listProducts.count.toString());
+    return response.json(listProducts.products);
   }
 
   public async create(request: Request, response: Response): Promise<Response> {

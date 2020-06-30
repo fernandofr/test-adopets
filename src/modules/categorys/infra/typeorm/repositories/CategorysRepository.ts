@@ -16,6 +16,18 @@ class CategorysRepository implements ICategorysRepository {
     return this.ormRepository.find();
   }
 
+  public async findCategoryByTitle(title: string): Promise<string> {
+    const category = await this.ormRepository.findOne({
+      where: { title },
+    });
+
+    if (!category) {
+      throw new AppError('Category not found', 404);
+    }
+
+    return category.id;
+  }
+
   public async create(title: string): Promise<Category> {
     if (!title) {
       throw new AppError('Please enter a valid category.');

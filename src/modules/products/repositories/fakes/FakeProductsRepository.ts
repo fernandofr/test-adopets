@@ -2,14 +2,20 @@ import { uuid } from 'uuidv4';
 
 import IProductsRepository from '@modules/products/repositories/IProductsRepository';
 import ICreateProductDTO from '@modules/products/dtos/ICreateProductDTO';
+import IReadProductDTO from '@modules/products/dtos/IReadProductDTO';
+import IQueryParamsProductDTO from '@modules/products/dtos/IQueryParamsProductDTO';
 
 import Product from '../../infra/typeorm/entities/Product';
 
 class ProductsRepository implements IProductsRepository {
   private products: Product[] = [];
 
-  public async findAll(): Promise<Product[]> {
-    return this.products;
+  public async findAll(
+    page: number,
+    limit: number,
+    params: IQueryParamsProductDTO,
+  ): Promise<IReadProductDTO> {
+    return { products: this.products, count: 0 };
   }
 
   public async findById(id: string): Promise<Product | undefined> {

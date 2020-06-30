@@ -1,7 +1,9 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, Like } from 'typeorm';
 
 import IProductsRepository from '@modules/products/repositories/IProductsRepository';
 import ICreateProductDTO from '@modules/products/dtos/ICreateProductDTO';
+import IReadProductDTO from '@modules/products/dtos/IReadProductDTO';
+import IQueryParamsProductDTO from '@modules/products/dtos/IQueryParamsProductDTO';
 
 import AppError from '@shared/errors/AppError';
 
@@ -19,13 +21,32 @@ class ProductsRepository implements IProductsRepository {
     return product;
   }
 
-  public async findAll(): Promise<Product[]> {
-    const products = await this.ormRepository.find({
-      skip: 0,
-      take: 10,
+  public async findAll(
+    page: number,
+    limit: number,
+    params: IQueryParamsProductDTO,
+  ): Promise<IReadProductDTO> {
+    const { name, description, category_id } = params;
+    let where;
+    if (name) {
+      where = { Like(name); };
+    }
+
+    if (description) {
+      where = { ...where, Like(description); };
+    }
+
+    if (category_id) {
+      where = { ...where, category_id };
+    }
+
+    const [data, count] = await this.ormRepository.findAndCount({
+      skip: ((page as number) - 1) * (limit as number),
+      take: limit as number,
+      where: params,
     });
 
-    return products;
+    return { products: data, count };
   }
 
   public async create({
