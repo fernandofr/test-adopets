@@ -24,7 +24,7 @@ export default class ProductsController {
     const { page = 1, limit = 10 }: IPagination = request.query;
     const { name, description, category }: IQueryParams = request.query;
 
-    let where;
+    let where = {};
     if (name) {
       where = { name };
     }
