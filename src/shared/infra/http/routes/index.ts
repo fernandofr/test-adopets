@@ -6,12 +6,13 @@ import categorysRouter from '@modules/categorys/infra/http/routes/categorys.rout
 import productsRouter from '@modules/products/infra/http/routes/products.routes';
 
 import ensureAuthenticated from '../middleware/ensureAuthenticated';
+import appLogger from '../middleware/appLogger';
 
 const routes = Router();
 
-routes.use('/users', usersRouter);
-routes.use('/session', sessionRouter);
-routes.use('/categorys', ensureAuthenticated, categorysRouter);
-routes.use('/products', ensureAuthenticated, productsRouter);
+routes.use('/users', appLogger, usersRouter);
+routes.use('/session', appLogger, sessionRouter);
+routes.use('/categorys', ensureAuthenticated, appLogger, categorysRouter);
+routes.use('/products', ensureAuthenticated, appLogger, productsRouter);
 
 export default routes;

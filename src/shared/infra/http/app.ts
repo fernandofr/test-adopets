@@ -10,6 +10,7 @@ import AppError from '@shared/errors/AppError';
 
 import '@shared/container';
 import createConnection from '@shared/infra/typeorm';
+import logger from './middleware/logger';
 import routes from './routes';
 
 createConnection();
@@ -23,13 +24,16 @@ app.use(errors());
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
   if (err instanceof AppError) {
-    return response.status(err.statusCode).json({
+    const error = {
       status: 'error',
       message: err.message,
-    });
+    };
+
+    logger.error(error);
+    return response.status(err.statusCode).json(error);
   }
 
-  console.error(err);
+  logger.error(err);
 
   return response.status(500).json({
     status: 'error',

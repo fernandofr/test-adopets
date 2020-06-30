@@ -26,20 +26,6 @@ class ProductsRepository implements IProductsRepository {
     limit: number,
     params: IQueryParamsProductDTO,
   ): Promise<IReadProductDTO> {
-    const { name, description, category_id } = params;
-    let where;
-    if (name) {
-      where = { Like(name); };
-    }
-
-    if (description) {
-      where = { ...where, Like(description); };
-    }
-
-    if (category_id) {
-      where = { ...where, category_id };
-    }
-
     const [data, count] = await this.ormRepository.findAndCount({
       skip: ((page as number) - 1) * (limit as number),
       take: limit as number,

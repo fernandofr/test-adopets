@@ -17,7 +17,6 @@ export default class CreateTableUsers1593292093653
           {
             name: 'name',
             type: 'varchar',
-            isUnique: true,
           },
           {
             name: 'email',
