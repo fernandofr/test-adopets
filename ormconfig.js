@@ -1,11 +1,12 @@
+console.log(process.env.TYPEORM_MIGRATIONS)
 module.exports = {
   type: "postgres",
   url: process.env.DATABASE_URL,
   entities: [
-    "dist/modules/**/infra/typeorm/entities/*.ts"
+    process.env.TYPEORM_ENTITIES
   ],
   migrations: [
-    "dist/shared/infra/typeorm/migrations/*.ts"
+    process.env.TYPEORM_MIGRATIONS
   ],
   cli: {
     migrationsDir: "./src/shared/infra/typeorm/migrations"
