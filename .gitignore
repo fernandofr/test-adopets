@@ -3,6 +3,8 @@
 node_modules/
 build/
 temp/
+dist
+
 
 tmp/*
 !tmp/.gitkeep
